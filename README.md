@@ -653,7 +653,8 @@ quantized model in frozen graph format.
 This section covers the inference time comparison between Stock Tensorflow version and Intel Tensorflow distribution for this model training and prediction. The results are captured for varying batch sizes which includes training time and inference time. The results are used to calculate the performance gain achieved by using Intel One API packages over stock version of similar packages.
 
 
-![image](assets/FP32AndINT8IDefaultQuantizationnferenceBenchmarksGraph.PNG)
+![image](assets/FP32AndINT8IDefaultQuantizationnferenceBenchmarksGraph.png)
+
 <br>**Key Takeaways**<br>
 - TensorFlow 2.9.0 with Intel OneDNN offers real time inference speed-up of upto 1.08x and batch inference time speed-up ranging between 1.16x and 1.24x compared to stock TensorFlow 2.8.0 version with different batch sizes.
 - Intel® Neural Compressor distribution with default quantization offers real time inference speed-up of upto 1.94x and batch inference time speed-up ranging between 1.86x and 1.93x compared to Stock TensorFlow 2.8.0 version with different batch sizes.
