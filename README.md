@@ -20,9 +20,10 @@ and classify named entities in text into pre-defined categories using Tensorflow
 
 ## **Table of Contents**
  - [Purpose](#purpose)
- - [Reference Solution](#proposed-solution)
+ - [Reference Solution](#reference-solution)
  - [Reference Implementation](#reference-implementation)
- - [Intel® Implementation](#optimizing-the-E2E-solution-with-Intel®-oneAPI)
+ - [Intel® Implementation](#optimizing-the-e2e-solution-with-intel-optimizations-for-tensorflow)
+ - [Jupyter Notebook - Demo](#jupyter-notebook-demo)
  - [Performance Observations](#performance-observations)
 
 ## **Purpose**
@@ -37,7 +38,7 @@ With NER, organizations look to automate to address the following challenges:
 - Growing shortage of highly skilled staff to review documents
 
 <p>The models built for NER are predominately used as intermediate models in complex AI model architecture designed for various data 
-science applications. 
+science applications. </p>
 
 ## **Reference Solution**
 In this reference kit, we build a deep learning model to predict the named entity tags for the given sentence. We also focus on below critical factors
@@ -254,9 +255,18 @@ or
 https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
 
 ### ***Solution setup***
-Follow the below conda installation commands to setup the Stock enviroment along with the necessary packages for this model training and prediction.
+Follow the below conda installation commands to setup the Stock environment and convert it to a usable notebook kernel along with the necessary packages for this model training and prediction.
 >Note: It is assumed that the present working directory is the root directory of this code repository
 
+First, install 'Jupyter notebook' in the base environment using the following terminal command:
+```
+conda install -c conda-forge notebook
+```
+Then, install 'nb_conda_kernels'. This extension will allow the base environment to access kernels of other environments. In our case, this will allow us to access both the Stock and Intel environments in a notebook called in the base environment.
+```
+conda install -c conda-forge nb_conda_kernels
+```
+Now create the Stock environment
 ```
 conda env create --file env/stock/ner_stock.yml
 ```
@@ -276,135 +286,13 @@ Use the following command to activate the environment that was created:
 ```sh
 conda activate ner_stock
 ```
-
-After activating the environment for stock Tensorflow framework, make sure the oneDNN flag is 
-disabled by running the below instruction at the command line.
+While in the ner_stock environment, install 'ipykernel'. This is an execution backend for Jupyter that will allow us to access this environment
 ```
-export TF_ENABLE_ONEDNN_OPTS=0
-```
-
-Verify if the flag is enabled by using the below command.
-<br>
-```
-echo $TF_ENABLE_ONEDNN_OPTS
+conda install ipykernel
 ```
 
 ### **Reference Sources**
 *Case Study* https://www.kaggle.com/code/ravikumarmn/ner-using-bert-tensorflow-99-35/notebook<br>
-
-### ***Solution implementation***
-
-#### **Model building process**
-The Python script given below need to be executed to start training using the 
-active environment enabled by using the above steps to setup the environment. 
-
-The script will run the benchmarks for the passed parameters and displays the corresponding 
-training time in seconds. The details of the script and parameters are given below.
-
-Execute the Python script as given below to start training for specific batch size and given dataset file.
-```shell
-python src/run_modeltraining.py --batchsize <batchsize value> --dataset_file <dataset filename> -i <intel/stock> --save_model_path <save file path>
-
-```
-
-  Arguments:<br>
-```
-  --help                   show this help message and exit
-  --batchsize              Give the required batch sizes
-  --dataset_file           Give the name of dataset file
-  --i                      0 for stock, 1 for intel environment
-  --save_model_path        Give the directory path to save the model after the training
-```
-<b>Note:</b> 
-1) The dataset file and save_model_path parameters are mandatory to be given, remaining parameters if not given will take the default values
-2) --help option will give the details of the arguments
-
-<b>Example</b>: 
-```shell
-python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 0 --save_model_path "./models/trainedmodels/"
-```
-This command runs the model with batch size of 128, using dataset file <i>ner_dataset.csv</i>, for stock environment
-and saves the trained model in <i>"./models/trainedmodels/stock/model_b128/" </i> folder and 
-subsequently, outputs the training time of the model. The user can collect the logs by 
-redirecting the output to a file as illustrated below.
-
-```shell
-python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 0 --save_model_path "./models/trainedmodels/" | tee <log_file_name>
-```
-
-
-The output of the python script <i>run_modeltraining.py</i> will be collected in the file <log_file_name>
-
-**Expected Output**
-
-Output would be generated by the Python script <i>run_modeltraining.py</i> which will capture the overall training time in seconds.
-The output can be redirected to a file as per the command above.
-
-The lines below are from the sample output of the python script <i>run_modeltraining.py</i> and it gives details of training the model
-
-    ----------------------------------------
-    # Model Training 
-    # Time (in seconds): 6879.922860383987
-    # Batch size: 32
-    # Model saved path: ./models/trainedmodels/
-    ----------------------------------------
-
-### Model Inference or Predictions
-The Python script given below need to be executed to do inference using the 
-active environment enabled by using the above steps to setup the environment. 
-
-The script will run the benchmarks for the passed parameters and 
-displays the corresponding inference time in seconds. The details of the script
-and parameters are given below.
-
-Execute the Python script as given below to perform prediction for specific batch size and dataset file.
-```shell
-python src/run_inference.py --batchsize <batchsize value> --dataset_file <dataset filename> -i <intel/stock> --model_path <model file path>
-
-```
-
-  Arguments:<br>
-```
-  --help                   show this help message and exit
-  --batchsize              Give the required batch sizes
-  --dataset_file           Give the name of test dataset file
-  --i                      0 for stock, 1 for intel environment
-  --model_path             Give the directory path the trained model
-```
-
-<b>Note:</b>
-1) All the options above are optional expect for test dataset file and model_path, if not given will take the default values
-2) --help option will give the details of the arguments<br>
-
-<b>Example</b>: 
-```shell
-python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 0 --model_path "./models/trainedmodels/stock/model_b128/model_checkpoint"
-```
-This command runs the model with batch size of 128, using test dataset file <i>ner_test_dataset.csv</i>, for stock environment
-for the trained model (trained in intel environment) in <i>"./models/trainedmodels/stock/model_b128/model_checkpoint"</i> folder and 
-subsequently, outputs the inference time of the model. The user can collect the logs by 
-redirecting the output to a file as illustrated below.
-
-```shell
-python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 0 --model_path "./models/trainedmodels/stock/model_b128/model_checkpoint" | tee <log_file_name>
-```
-The output of the script <i>run_inference.py</i> will be collected in the log_file_name.
-
-**Expected Output**
-
-Output would be generated by the Python script <i>run_inference.py</i> which will capture the overall inference time in seconds.
-The output can be redirected to a file as per the command above.
-
-The lines below from the sample output of the python script run_inference.py and it gives details of inference of the model
-
-    ----------------------------------------
-    # Model Inference details:
-    # Real time inference (in seconds): 0.11928558349609375
-    # Average batch inference:
-    #   Time (in seconds): 5.85315097249349
-    #   Batch size: 128
-    ----------------------------------------
-
 
 ## **Optimizing the E2E solution with Intel Optimizations for Tensorflow**
 Although AI delivers a solution to address named entity recognition, on a production scale implementation with millions 
@@ -464,190 +352,26 @@ Use the following command to activate the environment that was created:
 ```shell
 conda activate ner_intel
 ```
-
-### ***Optimized Solution implementation***
-After activating the environment for Intel Tensorflow framework, make sure the oneDNN flag is 
-enabled by running the below instruction at the command line.
-```shell
-export TF_ENABLE_ONEDNN_OPTS=1
+While in the ner_intel environment, install 'ipykernel'. As with the Stock environment, this will allow us to access this environment
 ```
-
-Verify if the flag is enabled by using the below command.
-<br>
-```shell
-echo $TF_ENABLE_ONEDNN_OPTS
+conda install ipykernel
 ```
-
-#### **Model building process with Intel® optimizations**
-The python script run_modeltraining.py used for training on stock version is used for training the model on Intel environment also
-as per example below.
-
-<b>Example</b>: 
-```shell
-python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 1 --save_model_path "./models/trainedmodels/"
-```
-This command runs the model with batch size of 128, using dataset file <i>ner_dataset.csv</i>, for intel environment
-and saves the trained model in <i>"./models/trainedmodels/stock/model_b128/" </i> folder and 
-subsequently, outputs the training time of the model. The user can collect the logs by 
-redirecting the output to a file as illustrated below.
-
-```shell
-python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 1 --save_model_path "./models/trainedmodels/" | tee <log_file_name>
-```
-
-The output of the python script <i>run_modeltraining.py</i> will be collected in the file <log_file_name>
-
-**Expected Output**
-Output would be generated by the Python script <i>run_modeltraining.py</i> which will capture the overall training time in seconds.
-The output can be redirected to a file as per the command above.
-
-The lines below are from the sample output of the python script <i>run_modeltraining.py</i> and it gives details of training the model
-
-    ----------------------------------------
-    # Model Training 
-    # Time (in seconds): 6879.922860383987
-    # Batch size: 32
-    # Model saved path: ./models/trainedmodels/
-    ----------------------------------------
-
-#### **Model Inference process with Intel® optimizations**
-The python script run_inference.py used to obtain inference benchmarks for stock version is used for getting inference benchmarks for 
-Intel environment also as per example below.
-
-<b>Example</b>: 
-```shell
-python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 1 --model_path "./models/trainedmodels/intel/model_b128/model_checkpoint"
-```
-This command runs the model with batch size of 128, using test dataset file <i>ner_test_dataset.csv</i>, for Intel environment
-for the trained model (trained in intel environment) in <i>"./models/trainedmodels/intel/model_b128/model_checkpoint"</i> folder and 
-subsequently, outputs the inference time of the model. The user can collect the logs by 
-redirecting the output to a file as illustrated below.
-
-```shell
-python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 1 --model_path "./models/trainedmodels/intel/model_b128/model_checkpoint" | tee <log_file_name>
-```
-The output of the script <i>run_inference.py</i> will be collected in the log_file_name.
-
-**Expected Output**
-Output would be generated by the Python script <i>run_inference.py</i> which will capture the overall inference time in seconds.
-The output can be redirected to a file as per the command above.
-
-The lines below from the sample output of the python script run_inference.py and it gives details of inference of the model
-
-    ----------------------------------------
-    # Model Inference details:
-    # Real time inference (in seconds): 0.11928558349609375
-    # Average batch inference:
-    #   Time (in seconds): 5.85315097249349
-    #   Batch size: 128
-    ----------------------------------------
-
 #### **Model Conversion process with Intel Neural Compressor**
 Intel® Neural Compressor is used to quantize the FP32 Model to the INT8 Model. 
 Optimzied model is used here for evaluating and timing Analysis. 
 Intel® Neural Compressor supports many optimization methods. 
 In this case, we have used post training quantization with default quantization method to quantize the FP32 model.
 
-Before performing the quantization of the trained model, the model is converted to frozen graph format using the <i>run_create_frozen_graph.py</i>
-python script. The usage of this script to generate the frozen graph is given below.
+## **Jupyter Notebook Demo**
+You can directly access the Jupyter notebook shared in this repo [here](https://github.com/kta-intel/document-automation/blob/f8abe4dbbc0646f759809ffedc2c4c3e78bb4043/demo.ipynb). \
+\
+Alternatively, if you wish to run the cloned notebook in your local repo, open a notebook from your base environment (or whichever environment you installed `nb_conda_kernels`)
+```sh
+conda activate base
+jupyter notebook
+```
+Ensure that `ipykernel` is installed in each of the Stock and Intel environments created in the previous steps. You may now access each kernel to run the necessary cells.
 
-```
-python src/run_create_frozen_graph.py --model_path <trained model file path> --save_model_path <path to save the model frozen graph>
-```
-where,<br>
-<b>model_path</b> - The path of the FP32 trained model <br>
-<b>save_model_path</b> - The path to save the frozen graph format of the model given in model_path<br>
-
-<b>Example:</b>
-```
-python src/run_create_frozen_graph.py --model_path "./models/trainedmodels/intel/model_b32/model_checkpoint" --save_model_path "./models/frozen_models/intel/model_b32/"
-```
-The model at <i>"./models/trainedmodels/intel/model_b32/model_checkpoint"</i> will be converted to frozen graph format and 
-will be saved at <i>"./models/frozen_models/intel/model_b32/"</i>
-
-Once the frozen model format of the model is created, the <i>run_neural_compressor_conversion.py</i> python script is used for 
-quanitization of the FP32 trained model. The syntax for using the script
-given below.
-
-```
-python src/run_neural_compressor_conversion.py --dataset_file <test dataset file name> --model_path <path of the frozen graph> --config_file <configuration file> --save_model_path <path to save the model>
-```
-where,
-```
---dataset_file        The path of the test dataset file
---model_path          The path of the model file in the frozen graph format
---config_file         The path of the configuration file which contains the settings for the quanitization
---save_model_path     The path to save the quantized model
-```
-<b>Example:</b>
-```
-python src/INC/run_neural_compressor_conversion.py --dataset_file "./data/ner_test_quan_dataset.csv" --model_path "./models/frozen_models/intel/model_b32/frozen_graph.pb" --config_file "./env/deploy.yaml" --save_model_path "./models/quantized_models/intel/model_b32_d100/inc_model_b32_d100/"
-```
-
-where <i>"./data/ner_test_quan_dataset.csv"</i> is the name of the file which contains the samples to be used during evaluation, <i>"./models/frozen_models/intel/model_b32/frozen_graph.pb"</i> is the model file in frozen graph format, <i>"./env/deploy.yaml"</i> is the configuration
-file with settings for the INC quantization module and <i>"./models/quantized_models/intel/model_b32_d100/inc_model_b32_d100/"</i>
-is the path to save the quantized model.
-
->Note:
-If while running the above script if the error "Unable to run due to ImportError: libGL.so.1: 
-cannot open shared object file: No such file or directory" occurs then install libgl using the command,
-sudo apt-get install libgl1
-
-If the quanitized model need to be tuned to evaluate a specific accuracy relative to the FP32 trained model then the respective configuration
-parameters need to set in the config file. The python script <i>run_neural_compressor_tune_conversion.py</i> need to used for the same. The syntax
-of the script and usage is given below.
-
-```
-python src/INC/run_neural_compressor_tune_conversion.py --dataset_file <test dataset file name> --model_path <path of the frozen graph> --config_file <configuration file> --save_model_path <path to save the model>
-```
-where,
-```
---dataset_file        The path of the test dataset file
---model_path          The path of the model file in the frozen graph format
---config_file         The path of the configuration file which contains the settings for the quanitization
---save_model_path     The path to save the quantized model
-```
-The usage of the script is similar to the <i>run_neural_compressor_conversion.py</i> except for the configuration file.
-
-<b>Example:</b>
-```
-python src/INC/run_neural_compressor_tune_conversion.py --dataset_file "./data/ner_test_quan_dataset.csv" --model_path "./models/frozen_models/intel/model_b32/frozen_graph.pb" --config_file "./env/deploy_accuracy.yaml" --save_model_path "./models/acc_quantized_models/intel/model_b32_d100/inc_model_b32_d100/"
-```
-
-where <i>"./data/ner_test_quan_dataset.csv"</i> is the name of the file which contains the samples to be used during evaluation, <i>"./models/frozen_models/intel/model_b32/frozen_graph.pb"</i> is the model file in frozen graph format, <i>"./env/deploy_accuracy.yaml"</i> is the configuration
-file with settings for the INC quantization module to fine tune the quanitized model and <i>"./models/acc_quantized_models/intel/model_b32_d100/inc_model_b32_d100/"</i>
-is the path to save the quantized model.
-
->Note:
-If while running the above script if the error "Unable to run due to ImportError: libGL.so.1: 
-cannot open shared object file: No such file or directory" occurs then install libgl using the command,
-sudo apt-get install libgl1
-
-#### **Model Inference process with Intel® Quanitizations**
-Now that the quantized model is created using INC it can be used for inferencing on the test data and perform benchmarking.
-The inferencing is done on the FP32 model and INC quantized model and results for real time inference and batch inference are used
-for benchmarking.
-
-The python script <i>run_neural_compressor_inference.py</i> is used for perform predictions on the test data. The syntax to use the script 
-is given below.
-
-```
-python src/INC/run_neural_compressor_inference.py --batch_size 32 --dataset_file <test dataset file> --model_path <FP32 or INC frozen graph file>
-```
-where,
-```
---batch_size      Give the required batch size for inference
---dataset_file    The path of the test data set file name
---model_path      The path of the FP32 or quantized frozen graph model
-```
-<b>Example:</b>
-```
-python src/INC/run_neural_compressor_inference.py --batch_size 128 --dataset_file "./data/ner_test_quan_dataset.csv" --model_path "./models/quantized_models/intel/model_b128_d100/inc_model_b128_d100.pb" | tee <log_file_name>
-```
-
-The inference is done for batch size of 128, with test dataset file <i>"./data/ner_test_quan_dataset.csv"</i>, using the 
-model <i>"./models/frozen_models/frozen_graph.pb"</i> in frozen graph format. The model can also be a 
-quantized model in frozen graph format.
 
 ## **Performance Observations**
 This section covers the inference time comparison between Stock Tensorflow version and Intel Tensorflow distribution for this model training and prediction. The results are captured for varying batch sizes which includes training time and inference time. The results are used to calculate the performance gain achieved by using Intel One API packages over stock version of similar packages.
