@@ -103,6 +103,48 @@ The below table provide details about the hyperparameters & values used for hype
 In the benchmarking results given in later sections, inference time for batch size of 1  which can also be read as real time inference 
 for one test sample.
 
+### **Initial setup**
+First clone the respository and navigate to the main repo executing the below command.
+```
+git clone https://github.com/oneapi-src/document-automation.git
+cd ./document-automation
+```
+Note that this reference kit implementation already provides the necessary scripts to setup the software requirements. 
+To utilize these environment scripts, first install Anaconda/Miniconda by following the instructions at the following link
+
+[Anaconda installation](https://docs.anaconda.com/anaconda/install/linux/)
+or
+https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
+
+### ***Software Requirements***
+
+1. Python - 3.9.x
+2. Tensorflow - 2.8.0
+
+### ***Solution setup***
+Follow the below conda installation commands to setup the Stock environment and convert it to a usable notebook kernel along with the necessary packages for this model training and prediction.
+>Note: It is assumed that the present working directory is the root directory of this code repository
+
+```
+conda env create --file env/stock/ner_stock.yml
+```
+
+>Note:
+If while creating the environment if the error "command 'gcc' failed: No such file or directory" occurs then,
+install gcc using the command below.
+sudo apt-get install gcc
+
+This command utilizes the dependencies found in the `env/stock/ner_stock.yml` file to create an environment as follows:
+
+**YAML file**                       | **Environment Name**         |  **Configuration** |
+| :---: | :---: | :---: |
+| `env/stock/ner_stock.yml`             | `ner_stock` | Python=3.9.x with Tensorflow 2.8.0
+
+Use the following command to activate the environment that was created:
+```sh
+conda activate ner_stock
+```
+
 ### **Dataset**
 <!-- Dataset Details -->
 Dataset used in this reference kit is taken from [Kaggle](https://www.kaggle.com/datasets/abhinavwalia95/entity-annotated-corpus)
@@ -153,9 +195,10 @@ export KAGGLE_KEY="key value"
 kaggle datasets download -d abhinavwalia95/entity-annotated-corpus
 ```
 16) The file "entity-annotated-corpus.zip" will be downloaded in the current directory
-17) Move the entity-annotated-corpus.zip file into data folder by executing this command.
+17) Move the entity-annotated-corpus.zip file into data folder by executing the following commands
 ```sh
-mv entity-annotated-corpus.zip ./data/
+cd ../
+mv ./kaggle/entity-annotated-corpus.zip ./data/
 ```
 18) Unzip the downloaded dataset by executing below
 ```sh
@@ -168,7 +211,6 @@ generate the training and testing datasets.
 20) Run the script gen_dataset.py in the root directory to generate the training and testing datasets.
 ```sh
 cd ../
-
 python src/gen_dataset.py --dataset_file ./data/ner_dataset.csv
 ```
 21) The files ner_dataset.csv, ner_test_dataset.csv and ner_test_quan_dataset.csv files will be generated in the current 
@@ -238,46 +280,6 @@ They marched from the Houses of Parliament to a rally in Hyde Park
 |Park		        |I-geo
 |.		          |O
 
-### ***Software Requirements***
-
-1. Python - 3.9.x
-2. Tensorflow - 2.8.0
-
-First clone the respository executing the below command.
-```
-git clone https://github.com/oneapi-src/document-automation.git
-```
-Note that this reference kit implementation already provides the necessary scripts to setup the software requirements. 
-To utilize these environment scripts, first install Anaconda/Miniconda by following the instructions at the following link
-
-[Anaconda installation](https://docs.anaconda.com/anaconda/install/linux/)
-or
-https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
-
-### ***Solution setup***
-Follow the below conda installation commands to setup the Stock environment and convert it to a usable notebook kernel along with the necessary packages for this model training and prediction.
->Note: It is assumed that the present working directory is the root directory of this code repository
-
-```
-conda env create --file env/stock/ner_stock.yml
-```
-
->Note:
-If while creating the environment if the error "command 'gcc' failed: No such file or directory" occurs then,
-install gcc using the command below.
-sudo apt-get install gcc
-
-This command utilizes the dependencies found in the `env/stock/ner_stock.yml` file to create an environment as follows:
-
-**YAML file**                       | **Environment Name**         |  **Configuration** |
-| :---: | :---: | :---: |
-| `env/stock/ner_stock.yml`             | `ner_stock` | Python=3.9.x with Tensorflow 2.8.0
-
-Use the following command to activate the environment that was created:
-```sh
-conda activate ner_stock
-```
-
 ### **Reference Sources**
 *Case Study* https://www.kaggle.com/code/ravikumarmn/ner-using-bert-tensorflow-99-35/notebook<br>
 
@@ -285,7 +287,7 @@ conda activate ner_stock
 Although AI delivers a solution to address named entity recognition, on a production scale implementation with millions 
 or billions of records demands for more compute power without leaving any performance on the table. Under this scenario, 
 a named entity recognition models are essential for identifying and extracting entities which will enable analyst to take
-appropriate decisions. For example in healthcare it can be used to identifying and extracting entities like diseases, tests,
+appropriate decisions. For example in healthcare it can be used for identifying and extracting entities like diseases, tests,
 treatments and test results.  In order to derive the most insightful and beneficial actions to take, they will need to study 
 and analyze the data generated though various feature sets and algorithms, thus requiring frequent re-runs of the algorithms 
 under many different parameter sets. To utilize all the hardware resources efficiently, Software optimizations cannot be ignored.   
@@ -342,7 +344,7 @@ conda activate ner_intel
 
 #### **Model Conversion process with Intel Neural Compressor**
 Intel® Neural Compressor is used to quantize the FP32 Model to the INT8 Model. 
-Optimzied model is used here for evaluating and timing Analysis. 
+Optimized model is used here for evaluating and timing Analysis. 
 Intel® Neural Compressor supports many optimization methods. 
 In this case, we have used post training quantization with default quantization method to quantize the FP32 model.
 
