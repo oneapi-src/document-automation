@@ -258,15 +258,6 @@ https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html
 Follow the below conda installation commands to setup the Stock environment and convert it to a usable notebook kernel along with the necessary packages for this model training and prediction.
 >Note: It is assumed that the present working directory is the root directory of this code repository
 
-First, install 'Jupyter notebook' in the base environment using the following terminal command:
-```
-conda install -c conda-forge notebook
-```
-Then, install 'nb_conda_kernels'. This extension will allow the base environment to access kernels of other environments. In our case, this will allow us to access both the Stock and Intel environments in a notebook called in the base environment.
-```
-conda install -c conda-forge nb_conda_kernels
-```
-Now create the Stock environment
 ```
 conda env create --file env/stock/ner_stock.yml
 ```
@@ -285,10 +276,6 @@ This command utilizes the dependencies found in the `env/stock/ner_stock.yml` fi
 Use the following command to activate the environment that was created:
 ```sh
 conda activate ner_stock
-```
-While in the ner_stock environment, install 'ipykernel'. This is an execution backend for Jupyter that will allow us to access this environment
-```
-conda install ipykernel
 ```
 
 ### **Reference Sources**
@@ -352,10 +339,7 @@ Use the following command to activate the environment that was created:
 ```shell
 conda activate ner_intel
 ```
-While in the ner_intel environment, install 'ipykernel'. As with the Stock environment, this will allow us to access this environment
-```
-conda install ipykernel
-```
+
 #### **Model Conversion process with Intel Neural Compressor**
 Intel® Neural Compressor is used to quantize the FP32 Model to the INT8 Model. 
 Optimzied model is used here for evaluating and timing Analysis. 
@@ -365,12 +349,11 @@ In this case, we have used post training quantization with default quantization 
 ## **Jupyter Notebook Demo**
 You can directly access the Jupyter notebook shared in this repo [here](https://github.com/kta-intel/document-automation/blob/f8abe4dbbc0646f759809ffedc2c4c3e78bb4043/demo.ipynb). \
 \
-Alternatively, if you wish to run the cloned notebook in your local repo, open a notebook from your base environment (or whichever environment you installed `nb_conda_kernels`)
+To launch your own instance, activate either the 'ner_stock' or 'ner_intel' environments created in the pervious steps and execute the following command
 ```sh
-conda activate base
 jupyter notebook
 ```
-Ensure that `ipykernel` is installed in each of the Stock and Intel environments created in the previous steps. You may now access each kernel to run the necessary cells.
+Open 'demo.ipynb' and follow the instructions there to perform training and inference on both the Stock and Intel optimized solutions.
 
 
 ## **Performance Observations**
