@@ -351,7 +351,7 @@ In this case, we have used post training quantization with default quantization 
 ## **Jupyter Notebook Demo**
 You can directly access the Jupyter notebook shared in this repo [here](demo.ipynb). \
 \
-To launch your own instance, activate either the `ner_stock` or `ner_intel` environments created in the previous steps and execute the following command
+To launch your own instance, activate either one of the `ner_stock` or `ner_intel` environments created in the previous steps and execute the following command.
 ```sh
 jupyter notebook
 ```
