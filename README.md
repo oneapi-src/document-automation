@@ -349,11 +349,11 @@ In this case, we have used post training quantization with default quantization 
 ## **Jupyter Notebook Demo**
 You can directly access the Jupyter notebook shared in this repo [here](https://github.com/kta-intel/document-automation/blob/f8abe4dbbc0646f759809ffedc2c4c3e78bb4043/demo.ipynb). \
 \
-To launch your own instance, activate either the 'ner_stock' or 'ner_intel' environments created in the pervious steps and execute the following command
+To launch your own instance, activate either the `ner_stock` or `ner_intel` environments created in the previous steps and execute the following command
 ```sh
 jupyter notebook
 ```
-Open 'demo.ipynb' and follow the instructions there to perform training and inference on both the Stock and Intel optimized solutions.
+Open `demo.ipynb` and follow the instructions there to perform training and inference on both the Stock and Intel optimized solutions.
 
 
 ## **Performance Observations**
