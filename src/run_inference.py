@@ -59,7 +59,15 @@ if __name__ == "__main__":
                         default=0,
                         help='use 1 to enable intel tensorflow optimizations, \
                             default is 0')
-
+    
+    parser.add_argument('-bf16',
+                        '--bf16',
+                        type=int,
+                        required=False,
+                        default=0,
+                        help='use 1 to enable bf16 capablities, \
+                            default is 0')
+    
     parser.add_argument('--model_path',
                         '--model_path',
                         type=str,
@@ -82,7 +90,11 @@ if __name__ == "__main__":
         os.environ["TF_ENABLE_ONEDNN_OPTS"] = "1"
     else:
         os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
-
+    
+    if FLAGS.bf16 == 1:
+        from tensorflow.keras import mixed_precision
+        mixed_precision.set_global_policy('mixed_bfloat16')
+        
     if FLAGS.model_path is None:
         logger.info("Please provide path to save the model...\n")
         sys.exit(1)
