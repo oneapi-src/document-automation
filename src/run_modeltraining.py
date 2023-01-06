@@ -120,8 +120,8 @@ if __name__ == "__main__":
         sys.exit(1)
     
     if FLAGS.bf16 == 1:
-        from tensorflow.keras import mixed_precision
-        mixed_precision.set_global_policy('mixed_bfloat16')
+        import tensorflow as tf
+        tf.config.optimizer.set_experimental_options({"auto_mixed_precision_mkl": True})
         
     if FLAGS.intel == 1:
         os.environ["TF_ENABLE_ONEDNN_OPTS"] = "1"
