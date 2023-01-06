@@ -92,9 +92,8 @@ if __name__ == "__main__":
         os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
     
     if FLAGS.bf16 == 1:
-        from tensorflow.keras import mixed_precision
-        mixed_precision.set_global_policy('mixed_bfloat16')
-        
+        import tensorflow as tf
+        tf.config.optimizer.set_experimental_options({"auto_mixed_precision_mkl": True})        
     if FLAGS.model_path is None:
         logger.info("Please provide path to save the model...\n")
         sys.exit(1)
