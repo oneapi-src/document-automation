@@ -421,7 +421,7 @@ This reference kit solution extends to demonstrate the advantages of using the I
 ![image](assets/e2e_flow_optimized.png)
 
 ### **Optimized software components**
-Intel Optimized Tensorflow (version 2.9.0 with oneDNN) TensorFlow framework has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives, a popular performance library for deep learning applications. It provides accelerated implementations of numerous popular DL algorithms that optimize performance on Intel® hardware with only requiring a few simple lines of modifications to existing code.
+Intel Optimized Tensorflow (version 2.9.0 with oneDNN) TensorFlow framework has been optimized using oneAPI Deep Neural Network Library (oneDNN) primitives, a popular performance library for deep learning applications. It provides accelerated implementations of numerous popular DL algorithms that optimize performance on Intel® hardware with only requiring a few simple lines of modifications to existing code. In addition the fourth generation Intel® Xeon® Scalable processors (Sapphire Rapids) provide suppport for AVX512 bf16 instructions to provide additional boost by utilizing Automatic Mixed Precision.
 
 Intel® OneAPI Neural Compressor (version 1.10.1) INC is an open-source Python* library. ML developers can incorporate this library for quantizing the deep learning models. It supports two types of quantization as mentioned below​
 
@@ -484,7 +484,7 @@ as per example below.
 
 <b>Example</b>: 
 ```shell
-python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 1 --save_model_path "./models/trainedmodels/"
+python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 1 --bf16 0 --save_model_path "./models/trainedmodels/"
 ```
 This command runs the model with batch size of 128, using dataset file <i>ner_dataset.csv</i>, for intel environment
 and saves the trained model in <i>"./models/trainedmodels/stock/model_b128/" </i> folder and 
@@ -492,8 +492,9 @@ subsequently, outputs the training time of the model. The user can collect the l
 redirecting the output to a file as illustrated below.
 
 ```shell
-python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 1 --save_model_path "./models/trainedmodels/" | tee <log_file_name>
+python src/run_modeltraining.py --batch_size 128 --dataset_file "./data/ner_dataset.csv" --intel 1 --bf16 0 --save_model_path "./models/trainedmodels/" | tee <log_file_name>
 ```
+>**Note** : You can enable bf16 training by setting the bf16 flag to 1 on platforms that supports AVX512 bf16 instructions, they include the third generation Intel® Xeon® Scalable processors (Cooper Lake) and the fourth generation Intel® Xeon® Scalable processors (Sapphire Rapids). AVX512 bf16 instructions are **not** supported by Ice Lake which is also a third generation Intel® Xeon® Scalable processor
 
 The output of the python script <i>run_modeltraining.py</i> will be collected in the file <log_file_name>
 
@@ -516,7 +517,7 @@ Intel environment also as per example below.
 
 <b>Example</b>: 
 ```shell
-python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 1 --model_path "./models/trainedmodels/intel/model_b128/model_checkpoint"
+python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 1 --bf16 0 --model_path "./models/trainedmodels/intel/model_b128/model_checkpoint"
 ```
 This command runs the model with batch size of 128, using test dataset file <i>ner_test_dataset.csv</i>, for Intel environment
 for the trained model (trained in intel environment) in <i>"./models/trainedmodels/intel/model_b128/model_checkpoint"</i> folder and 
@@ -524,8 +525,9 @@ subsequently, outputs the inference time of the model. The user can collect the 
 redirecting the output to a file as illustrated below.
 
 ```shell
-python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 1 --model_path "./models/trainedmodels/intel/model_b128/model_checkpoint" | tee <log_file_name>
+python src/run_inference.py --batch_size 128 --dataset_file "./data/ner_test_dataset.csv" --intel 1 --bf16 0 --model_path "./models/trainedmodels/intel/model_b128/model_checkpoint" | tee <log_file_name>
 ```
+>**Note** : You can enable bf16 inference by setting the bf16 flag to 1 on platforms that supports AVX512 bf16 instructions, they include the third generation Intel® Xeon® Scalable processors (Cooper Lake) and the fourth generation Intel® Xeon® Scalable processors (Sapphire Rapids). AVX512 bf16 instructions are **not** supported by Ice Lake which is also a third generation Intel® Xeon® Scalable processor
 The output of the script <i>run_inference.py</i> will be collected in the log_file_name.
 
 **Expected Output**
