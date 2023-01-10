@@ -525,7 +525,7 @@ for the trained model (trained in intel environment) in <i>"./models/trainedmode
 subsequently, outputs the inference time of the model. The user can collect the logs by 
 redirecting the output to a file as illustrated below.
 
->**Note** : You can enable bf16 training by setting the bf16 flag to 1. Please note that this flag MUST be enabled only on Intel® Fourth Gen Xeon® Scalable processor codenamed Sapphire Rapids that has bf16 training support and optimizations to utilize AMX,the latest ISA introduced in this family of processors.  
+>**Note** : You can enable bf16 inference by setting the bf16 flag to 1. Please note that this flag MUST be enabled only on Intel® Fourth Gen Xeon® Scalable processor codenamed Sapphire Rapids that has bf16 support and optimizations to utilize AMX,the latest ISA introduced in this family of processors.  
 
 
 ```shell
